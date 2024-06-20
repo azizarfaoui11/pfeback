@@ -34,6 +34,7 @@ public class PasswordResetController {
     private final PasswordEncoder passwordEncoder;
 
 
+
     @PostMapping("/request")
     public ResponseEntity<String> resetPasswordrequest(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -51,12 +52,15 @@ public class PasswordResetController {
     public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
         String token = request.get("token");
         String newPassword = request.get("newPassword");
+        //String verificationCode = request.get("verificationCode");
+
 
         PasswordResetToken passwordResetToken = tokenRepository.findByToken(token);
 
         if (passwordResetToken == null || passwordResetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             return ResponseEntity.badRequest().body("Le lien de réinitialisation est invalide ou a expiré.");
         }
+
 
         // Réinitialiser le mot de passe de l'utilisateur
         User user = userRepository.findByEmail(passwordResetToken.getEmail());

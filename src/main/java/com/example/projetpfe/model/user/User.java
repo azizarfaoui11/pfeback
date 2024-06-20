@@ -1,5 +1,6 @@
 package com.example.projetpfe.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +50,7 @@ public class User implements UserDetails, Principal {
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 

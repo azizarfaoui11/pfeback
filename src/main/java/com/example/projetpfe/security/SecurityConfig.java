@@ -56,7 +56,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**","/register/**", "/refresh_token/**","/getuser","/payment/charge","password-reset/reset","password-reset/request")
+                        req->req.requestMatchers("/login","/register/**","/me","/revoke-tokens","/refresh_token/**","/getuser","/payment/charge","ping","/pingg","password-reset/reset","password-reset/request","/pipeline","/logout","/getallusers","/userbyemail")
                                 .permitAll()
                                 .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
                                 .anyRequest()

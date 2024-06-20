@@ -93,6 +93,7 @@ public class JwtService {
 
     public String generateToken(User user, long expireTime) {
         String token = Jwts.builder()
+                .claim("role", user.getRole().toString())  // Ajoute le rôle comme revendication (claim)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTime))

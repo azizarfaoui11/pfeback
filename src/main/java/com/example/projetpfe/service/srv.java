@@ -1,4 +1,5 @@
 package com.example.projetpfe.service;
+import com.example.projetpfe.model.user.User;
 import com.example.projetpfe.service.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -23,6 +24,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
@@ -283,6 +285,11 @@ public class srv {
             System.out.println("Le paramètre 'url' n'a pas été trouvé dans la liste des actions.");
         }
     }
+
+
+
+
+
 
 
 

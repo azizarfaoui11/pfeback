@@ -22,4 +22,5 @@ public class PasswordResetToken {
     private String token;
     private String email;
     private LocalDateTime expiryDate;
+    private String verificationCode;
 }

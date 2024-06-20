@@ -48,7 +48,7 @@ public class Controller {
 
 
 
-        //  s.triggerJenkinsPipeline(pipelineParams);
+          s.triggerJenkinsPipeline(pipelineParams);
 
 
 

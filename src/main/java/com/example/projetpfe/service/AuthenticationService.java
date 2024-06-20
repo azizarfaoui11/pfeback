@@ -67,9 +67,6 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         //  user.setPassword(request.getPassword());
-
-
-
         user.setRole(request.getRole());
 
         user = userRepository.save(user);
@@ -121,7 +118,7 @@ public class AuthenticationService {
     }
 
 
-    private void revokeAllTokenByUser(User user) {
+    public void revokeAllTokenByUser(User user) {
         List<Token> validTokens = tokenRepository.findAllAccessTokensByUser(user.getId());
         if (validTokens.isEmpty()) {
             return;
@@ -176,4 +173,24 @@ public class AuthenticationService {
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
     }
+
+    // for bakcend :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
