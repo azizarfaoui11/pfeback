@@ -26,6 +26,7 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @EntityListeners(AuditingEntityListener.class)
+
 public class User implements UserDetails, Principal {
 
     @Id
@@ -44,8 +45,18 @@ public class User implements UserDetails, Principal {
 
     @Column(name = "password")
     private String password;
-    @Column(name= "email")
+
+    @Column(name= "email" , unique = true)
     private String email;
+
+    @Column(name = "verification_code")
+    private String verificationCode;
+
+    @Column(name = "email_verified")
+    private boolean emailVerified;
+
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked;
 
 
     @Enumerated(value = EnumType.STRING)
@@ -56,7 +67,7 @@ public class User implements UserDetails, Principal {
 
 
 
-
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -77,10 +88,21 @@ public class User implements UserDetails, Principal {
         return true;
     }
 
-    @Override
+   /* @Override
     public boolean isAccountNonLocked() {
+
         return false;
+    }*/
+   @Override
+   public boolean isAccountNonLocked() {
+       return accountNonLocked;
+   }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
+
+
 
     @Override
     public boolean isCredentialsNonExpired() {

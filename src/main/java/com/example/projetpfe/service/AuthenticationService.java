@@ -15,10 +15,13 @@ import com.sun.tools.jconsole.JConsoleContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,23 +45,34 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    //private final EmailService emailService;
     private final TokenRepository tokenRepository;
+    private final UserRepository ur;
+    @Autowired
+    private JavaMailSender mailSender;
 
     // @Value("${application.mailing.frontend.activation-url}")
     //private String activationUrl;
 
-    public User getclient (@RequestParam String username )
+   /* public User getclient (@RequestParam String username )
     {
         return  userRepository.findByUsername(username);
+    }*/
+    public User getclient (@RequestParam String email )
+    {
+        return  userRepository.findByEmail(email);
     }
 
     public RegistrationRequest register(User request) {
 
-        // check if user already exist. if exist than authenticate the user
-      /*  if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+
+        User u=userRepository.findByUsername(request.getUsername());
+        if(u!=null)
+        {
             return new RegistrationRequest("User already exist");
-        }*/
+
+        }
+
+
 
         User user = new User();
         user.setFirstname(request.getFirstname());
@@ -66,10 +80,20 @@ public class AuthenticationService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
+
         //  user.setPassword(request.getPassword());
         user.setRole(request.getRole());
+        user.setAccountNonLocked(false);
+        user.setEmailVerified(false);
+
+        String code = generateVerificationCode();
+        user.setVerificationCode(code);
 
         user = userRepository.save(user);
+
+        // Envoyer l'e-mail de vérification
+        sendVerificationEmail(user.getEmail(), code);
+
 
         // String accessToken = jwtService.generateAccessToken(user);
         // String refreshToken = jwtService.generateRefreshToken(user);
@@ -104,7 +128,8 @@ public class AuthenticationService {
     public String authenticate(User request) {
 
 
-        User user= this.getclient(request.getUsername());
+       // User user= this.getclient(request.getUsername());
+        User user = this.getclient(request.getEmail());
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Mot de passe incorrect");
         }
@@ -174,8 +199,80 @@ public class AuthenticationService {
 
     }
 
-    // for bakcend :
 
+
+    //verification de signup!
+
+    private String generateVerificationCode() {
+        // Générer un code de vérification à 6 chiffres
+        return String.valueOf((int)(Math.random() * 900000) + 100000);
+    }
+
+    private void sendVerificationEmail(String email, String code) {
+        String subject = "Email Verification";
+        String message = "Please verify your email by entering the following code:\n" + code;
+
+        SimpleMailMessage emailMessage = new SimpleMailMessage();
+        emailMessage.setTo(email);
+        emailMessage.setSubject(subject);
+        emailMessage.setText(message);
+
+        mailSender.send(emailMessage);
+    }
+
+
+    public String verifyEmail(String username, String code) {
+        User user = userRepository.findByUsername(username);
+        if (user == null || !user.getVerificationCode().equals(code)) {
+            return "Invalid verification code";
+        }
+
+        user.setAccountNonLocked(true); // Déverrouille le compte
+        user.setEmailVerified(true); // Marque l'email comme vérifié
+        userRepository.save(user);
+
+        return "Email verified successfully";
+    }
+
+    public User getuserbyid(Integer id)
+    {
+        return userRepository.findById(id).orElseThrow();
+    }
+    public void deleteuser(Integer id)
+    {
+        List<Token> tokens= tokenRepository.findAllAccessTokensByUser(id);
+        for(Token t : tokens)
+        {
+            tokenRepository.delete(t);
+        }
+
+         userRepository.deleteById(id);
+    }
+    /*public User updateuser(User u) {
+        return ur.save(u);
+    }*/
+
+    //status offline/online
+        public String status(Integer id)
+        {
+            User u=ur.findById(id).orElseThrow();
+            List<Token> tokens=u.getTokens();
+            if(tokens!=null) {
+                for (Token i : tokens) {
+                    if (i.isLoggedOut()) {
+                        return "offline";
+                    }
+                    else
+                        return "online";
+                }
+            }
+    
+                return "pas encore ";
+    
+    
+    
+    
+        }
 
 
 

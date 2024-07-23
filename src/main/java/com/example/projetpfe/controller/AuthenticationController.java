@@ -6,6 +6,7 @@ import com.example.projetpfe.model.user.User;
 import com.example.projetpfe.model.user.UserRepository;
 import com.example.projetpfe.model.user.Usersession;
 import com.example.projetpfe.service.AuthenticationService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -16,10 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -30,6 +34,8 @@ public class AuthenticationController {
     private final AuthenticationService service;
     @Autowired
     private final UserRepository userrepo;
+    private final PasswordEncoder passwordEncoder;
+
 
     @PostMapping("/register")
     public ResponseEntity<RegistrationRequest> register(
@@ -38,21 +44,28 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.register(request));
     }
 
-    /*@PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(
-            @RequestBody User request
-    ) {
-        return ResponseEntity.ok(service.authenticate(request));
-    }*/
-    @GetMapping("/getuser")
-    public User getclient(@RequestParam String username)
-    {
-        return service.getclient(username);
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam("username") String username, @RequestParam("code") String code) {
+        String result = service.verifyEmail(username, code);
+        if (result.equals("Email verified successfully")) {
+            return ResponseEntity.ok().body("{\"status\": \"success\", \"message\": \"Email verified successfully\"}");
+        } else {
+            return ResponseEntity.badRequest().body("{\"status\": \"error\", \"message\": \"" + result + "\"}");
+        }
     }
+
+
+    @GetMapping("/getuser")
+    public User getclient(@RequestParam String email)
+    {
+        return service.getclient(email);
+    }
+
+
     @PostMapping("/login")
     public String login(
-            @RequestBody User request
-    ) {
+            @RequestBody User request)
+    {
         return (service.authenticate(request));
     }
 
@@ -114,6 +127,7 @@ public class AuthenticationController {
     @GetMapping("/me")
     public ResponseEntity<Usersession> getCurrentUser(Principal principal) {
         User user =userrepo.findByFirstname(principal.getName());
+        //User user = userrepo.findByEmail(principal.getName());
 
         Usersession usersess = new Usersession(user.getFirstname(), user.getId());
        //User prinuser= user.getFirstname();
@@ -130,6 +144,11 @@ public class AuthenticationController {
         return users ;
 
     }
+    @GetMapping("/getuser/{id}")
+       public User showuser(@PathVariable("id") Integer idu)
+    {
+        return service.getuserbyid(idu);
+    }
 
     @GetMapping("/userbyemail")
     public User getuserbyemail(@RequestParam String email)
@@ -137,6 +156,56 @@ public class AuthenticationController {
         User u=userrepo.findByEmail(email);
         return u;
     }
+
+
+
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteuser(@PathVariable("id") Integer idu)
+    {
+         service.deleteuser(idu);
+    }
+
+    @PutMapping("/updateuser/{id}")
+    public User updateuser(@PathVariable("id") Integer id, @RequestBody User user)
+    {
+
+        User u = userrepo.findById(id).orElseThrow();
+        u.setFirstname(user.getFirstname());
+        u.setLastname((user.getLastname()));
+        u.setUsername(user.getUsername());
+        u.setEmail(user.getEmail());
+        u.setPassword(passwordEncoder.encode(user.getPassword()));
+        u.setRole(user.getRole());
+
+        return userrepo.save(u);
+    }
+
+   /* @PutMapping("/updateuser")
+
+        public User updateuser(@RequestBody User user)
+    {
+         return service.updateuser(user);
+    }*/
+
+    @PostMapping("/adduser")
+    public User addUser(@RequestBody User user)
+    {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userrepo.save(user);
+    }
+
+    @PostMapping("/status/{id}")
+            public ResponseEntity<Map<String,String>>status(@PathVariable Integer id)
+    {
+        String status=service.status(id);
+        Map<String,String> response= new HashMap<>();
+        response.put("status",status);
+    return ResponseEntity.ok(response);
+    }
+
+
+
 
 
 

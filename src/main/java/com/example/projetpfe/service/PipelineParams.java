@@ -71,6 +71,44 @@ public class PipelineParams {
     @JsonProperty("targetstage21")
 
     private String targetstage21;
+    @JsonProperty("targetstage22")
+
+    private String targetstage22;
+    @JsonProperty("targetstage23")
+
+    private String targetstage23;
+    @JsonProperty("targetstage24")
+
+    private String targetstage24;
+    @JsonProperty("targetstage25")
+
+    private Integer targetstage25;
+    @JsonProperty("targetstage26")
+
+    private Integer targetstage26;
+
+
+    @JsonProperty("targetstage27")
+
+    private Integer targetstage27;
+
+
+    @JsonProperty("targetstage28")
+
+    private String targetstage28;
+
+
+    @JsonProperty("targetstage29")
+
+    private String targetstage29;
+
+
+    @JsonProperty("targetstage30")
+
+    private String targetstage30;
+
+
+
 
 
 
@@ -239,6 +277,87 @@ public class PipelineParams {
     public void setTargetStage21(String targetstage21) {
         this.targetstage21= targetstage21;
     }
+
+    public String getTargetStage22() {
+        return targetstage22;
+    }
+
+    public void setTargetStage22(String targetstage22) {
+        this.targetstage22= targetstage22;
+    }
+
+    public String getTargetStage23() {
+        return targetstage23;
+    }
+
+    public void setTargetStage23(String targetstage23) {
+        this.targetstage23= targetstage23;
+    }
+
+    public String getTargetStage24() {
+        return targetstage24;
+    }
+
+    public void setTargetStage24(String targetstage24) {
+        this.targetstage24= targetstage24;
+    }
+
+
+    public Integer getTargetStage25() {
+        return targetstage25;
+    }
+
+    public void setTargetStage25(Integer targetstage25) {
+        this.targetstage25= targetstage25;
+    }
+
+
+    public Integer getTargetStage26() {
+        return targetstage26;
+    }
+
+    public void setTargetStage26(Integer targetstage26) {
+        this.targetstage26= targetstage26;
+    }
+
+
+    public Integer getTargetStage27() {
+        return targetstage27;
+    }
+
+    public void setTargetStage27(Integer targetstage27) {
+        this.targetstage27= targetstage27;
+    }
+
+
+    public String getTargetStage28() {
+        return targetstage28;
+    }
+
+    public void setTargetStage28(String targetstage28) {
+        this.targetstage28= targetstage28;
+    }
+
+    public String getTargetStage29() {
+        return targetstage29;
+    }
+
+    public void setTargetStage29(String targetstage29) {
+        this.targetstage29= targetstage29;
+    }
+
+    public String getTargetStage30() {
+        return targetstage30;
+    }
+
+    public void setTargetStage30(String targetstage30) {
+        this.targetstage30= targetstage30;
+    }
+
+
+
+
+
 
 
 

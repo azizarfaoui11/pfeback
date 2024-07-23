@@ -34,8 +34,8 @@ public class Controller {
         System.out.println("targetstage9: " + pipelineParams.getTargetStage9());
         System.out.println("targetstage10: " + pipelineParams.getTargetStage10());
         System.out.println("targetstage11: " + pipelineParams.getTargetStage11());
-        System.out.println("targetstage12: " + pipelineParams.getTargetStage12());
-        System.out.println("targetstage13: " + pipelineParams.getTargetStage13());
+        //System.out.println("targetstage12: " + pipelineParams.getTargetStage12());
+        //System.out.println("targetstage13: " + pipelineParams.getTargetStage13());
         System.out.println("targetstage14: " + pipelineParams.getTargetStage14());
         System.out.println("targetstage15: " + pipelineParams.getTargetStage15());
         System.out.println("targetstage16: " + pipelineParams.getTargetStage16());
@@ -44,16 +44,21 @@ public class Controller {
         System.out.println("targetstage19: " + pipelineParams.getTargetStage19());
         System.out.println("targetstage20: " + pipelineParams.getTargetStage20());
         System.out.println("targetstage21: " + pipelineParams.getTargetStage21());
+        System.out.println("targetstage22: " + pipelineParams.getTargetStage22());
+       // System.out.println("targetstage23: " + pipelineParams.getTargetStage23());
+       // System.out.println("targetstage24: " + pipelineParams.getTargetStage24());
+       // System.out.println("targetstage25: " + pipelineParams.getTargetStage25());
+        //System.out.println("targetstage26: " + pipelineParams.getTargetStage26());
+        //System.out.println("targetstage27: " + pipelineParams.getTargetStage27());
+       // System.out.println("targetstage28: " + pipelineParams.getTargetStage28());
+       // System.out.println("targetstage29: " + pipelineParams.getTargetStage29());
+        //System.out.println("targetstage30: " + pipelineParams.getTargetStage30());
+
+        s.triggerJenkinsPipeline(pipelineParams);
 
 
 
 
-          s.triggerJenkinsPipeline(pipelineParams);
-
-
-
-        // Vous pouvez ajouter ici votre logique de traitement
-        // par exemple, appeler un service pour exécuter la pipeline
 
         return ResponseEntity.ok("Pipeline triggered successfully");
     }
@@ -61,16 +66,34 @@ public class Controller {
 
 
     @PostMapping("/pipeline2")
-    public ResponseEntity<String> pipelinsel() {
+    public ResponseEntity<String> pipelinsel(@RequestBody PipelineParams pipelineParams) {
+
+        System.out.println("targetstage28: " + pipelineParams.getTargetStage28());
+        System.out.println("targetstage29: " + pipelineParams.getTargetStage29());
+        System.out.println("targetstage30: " + pipelineParams.getTargetStage30());
 
 
 
 
-               s.pipelinewindows();
+               s.pipelinewindows(pipelineParams);
 
 
-        // Vous pouvez ajouter ici votre logique de traitement
-        // par exemple, appeler un service pour exécuter la pipeline
+
+
+        return ResponseEntity.ok("Pipeline triggered successfully");
+    }
+
+    @PostMapping("/pipeline3")
+    public ResponseEntity<String> pipelinjmeter(@RequestBody PipelineParams pipelineParams) {
+
+        System.out.println("targetstage23: " + pipelineParams.getTargetStage23());
+        System.out.println("targetstage24: " + pipelineParams.getTargetStage24());
+        System.out.println("targetstage25: " + pipelineParams.getTargetStage25());
+        System.out.println("targetstage26: " + pipelineParams.getTargetStage26());
+        System.out.println("targetstage27: " + pipelineParams.getTargetStage27());
+
+
+         s.pipelinejmeter(pipelineParams);
 
         return ResponseEntity.ok("Pipeline triggered successfully");
     }
@@ -114,7 +137,7 @@ public class Controller {
 
     }
 
-    @GetMapping(    "/nexus-url")
+    @GetMapping("/nexus-url")
     public ResponseEntity<String> getnexusurl() {
         String nexusurl = s.getjarfile();
         // System.out.println("URL: " + this.getSonarQubeUrl());
@@ -131,7 +154,7 @@ public class Controller {
     }
     @GetMapping("/openUrljmeter")
     public String openUrll() {
-        url="http://192.168.33.10:8080/job/projetpfe/lastSuccessfulBuild/artifact/resultats.jtl/*view*/";
+        url="http://192.168.33.10:8080/job/jmeter/lastSuccessfulBuild/artifact/resultats.jtl/*view*/";
         //url=s.tandhifa();
         s.openUrl(url);
         return "URL testée avec succès : " + url;
